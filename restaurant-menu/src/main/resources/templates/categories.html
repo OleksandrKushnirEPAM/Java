@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Categories</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+  <style>
+
+    body{
+    font-family:'Roboto',sans-serif;
+    background-color:#fff8f0;
+    color:#333;
+    margin:0;
+    padding:0;
+    }
+
+    h2{
+    text-align:center;
+    padding:20px;
+    color:#d35400;
+    }
+
+    table{
+    border-collapse:collapse;
+    width:60%;
+    margin:0 auto 40px auto;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    th,td{
+    padding:12px 15px;
+    text-align:left;
+    }
+
+    th{
+    background-color:#f39c12;
+    color:white;
+    text-transform:uppercase;
+    }
+
+    tr:nth-child(even){
+    background-color:#fdf2e3;
+    }
+
+    button{
+    padding:8px 16px;
+    background-color:#d35400;
+    color:white;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    transition:0.2s;
+    }
+
+    button:hover{
+    background-color:#e67e22;
+    }
+
+    .delete-btn{
+    background-color:#c0392b;
+    }
+
+    .delete-btn:hover{
+    background-color:#e74c3c;
+    }
+
+    .form-container{
+    width:60%;
+    margin:0 auto 40px auto;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    background-color:#f9e5d8;
+    padding:15px;
+    border-radius:8px;
+    }
+
+    input{
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    }
+
+    .actions{
+    display:flex;
+    gap:6px;
+    }
+
+    a{
+    display:block;
+    text-align:center;
+    margin-bottom:20px;
+    color:#d35400;
+    font-weight:bold;
+    text-decoration:none;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<h2>Categories</h2>
+
+<a href="/menu/view">⬅ Back to Menu</a>
+
+<table>
+
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+
+  <tbody>
+
+  <tr th:each="cat : ${categories}">
+
+    <td th:text="${cat.id}"></td>
+    <td th:text="${cat.name}"></td>
+
+    <td>
+
+      <div class="actions">
+
+        <form th:action="@{/categories/delete/{id}(id=${cat.id})}" method="post">
+          <button class="delete-btn">Delete</button>
+        </form>
+
+      </div>
+
+    </td>
+
+  </tr>
+
+  </tbody>
+
+</table>
+
+
+<h3 style="text-align:center;">Add Category</h3>
+
+<form class="form-container" th:action="@{/categories/add}" method="post">
+
+  <input type="text" name="name" placeholder="Category name" required/>
+
+  <button type="submit">Add</button>
+
+</form>
+
+</body>
+</html>
