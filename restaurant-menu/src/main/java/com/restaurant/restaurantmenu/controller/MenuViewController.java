@@ -5,6 +5,7 @@ import com.restaurant.restaurantmenu.model.MenuItem;
 import com.restaurant.restaurantmenu.service.CategoryService;
 import com.restaurant.restaurantmenu.service.MenuItemService;
 import com.restaurant.restaurantmenu.service.MenuItemMapper;
+import com.restaurant.restaurantmenu.service.MenuParserService;
 import com.restaurant.restaurantmenu.dto.MenuItemDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,11 +20,16 @@ public class MenuViewController {
     private final MenuItemService menuService;
     private final CategoryService categoryService;
     private final MenuItemMapper mapper;
+    private final MenuParserService parserService;
 
-    public MenuViewController(MenuItemService menuService, CategoryService categoryService, MenuItemMapper mapper) {
+    public MenuViewController(MenuItemService menuService,
+                              CategoryService categoryService,
+                              MenuItemMapper mapper,
+                              MenuParserService parserService) {
         this.menuService = menuService;
         this.categoryService = categoryService;
         this.mapper = mapper;
+        this.parserService = parserService;
     }
 
     @GetMapping("/menu/view")
@@ -39,6 +45,7 @@ public class MenuViewController {
 
         return "menu";
     }
+
     @GetMapping("/menu/edit/{id}")
     public String editDishForm(@PathVariable Long id, Model model) {
         MenuItem item = menuService.getById(id).orElse(null);
@@ -48,7 +55,7 @@ public class MenuViewController {
         List<Category> categories = categoryService.getAll();
         model.addAttribute("menuItem", item);
         model.addAttribute("categories", categories);
-        return "menu-edit"; // новий HTML шаблон
+        return "menu-edit";
     }
 
     @PostMapping("/menu/edit/{id}")
@@ -78,6 +85,8 @@ public class MenuViewController {
                           @RequestParam double priceUah,
                           @RequestParam Long categoryId) {
 
+        if (priceUah <= 0) priceUah = 1;
+
         Category category = categoryService.getById(categoryId).orElse(null);
         if (category != null) {
             MenuItem item = new MenuItem();
@@ -90,9 +99,16 @@ public class MenuViewController {
 
         return "redirect:/menu/view";
     }
+
     @PostMapping("/menu/delete/{id}")
     public String deleteDish(@PathVariable Long id) {
         menuService.delete(id);
+        return "redirect:/menu/view";
+    }
+
+    @PostMapping("/menu/parse")
+    public String parseMenu() {
+        parserService.parseAndSave();
         return "redirect:/menu/view";
     }
 }

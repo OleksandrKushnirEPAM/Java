@@ -96,6 +96,16 @@
         .actions form{
             margin:0;
         }
+
+        /* верхній контейнер для парсингу та категорій */
+        .top-buttons{
+            width:80%;
+            margin:20px auto;
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+        }
+
     </style>
 </head>
 
@@ -103,10 +113,13 @@
 
 <h2>Restaurant Menu</h2>
 
-<div style="text-align:center; margin-bottom:20px;">
+<div class="top-buttons">
     <a href="/categories">
         <button type="button">Manage Categories</button>
     </a>
+    <form action="/menu/parse" method="post">
+        <button type="submit">Parse Menu (Jsoup)</button>
+    </form>
 </div>
 
 <table>
@@ -149,7 +162,6 @@
 
     </tbody>
 </table>
-
 
 <h3 style="text-align:center;">Add New Dish</h3>
 
